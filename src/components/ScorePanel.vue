@@ -1,14 +1,15 @@
 <template>
     <section class="score">
-      Jogador<span>{{ this.win_count }}</span> x 
-     <span>{{ this.lose_count }}</span> Computador
+      Jogador<span>{{ this.correctCount }}</span> x 
+     <span>{{ this.wrongCount }}</span> Computador
     </section>
 </template>
 
 <script>
 
 export default {
-   
+
+  props: ['correctCount', 'wrongCount']
 }
 
 </script>

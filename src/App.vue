@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ScorePanel />
+    <ScorePanel :wrongCount="this.wrongCount" :correctCount="this.correctCount" />
 
     <template v-if="this.title">
       <h1 v-html="this.title"></h1>
@@ -22,7 +22,7 @@
         <h4 v-else>&#10060; I'm sorry, you picked the wrong answer.
           The correct is "<span v-html="this.correctAnswer"></span>"
         </h4>
-        <button class="send" type="button" @click="this.getNewQuestion()">Next question</button>
+        <button class="send" type="button" @click="this.getNewQuestion(); saveStorage()">Next question</button>
       </section>
 
     </template>
@@ -33,7 +33,11 @@
 <script>
 
 import ScorePanel from './components/ScorePanel.vue';
+const CORRECT_COUNT_STORAGE = "correctCount";
+const WRONG_COUNT_STORAGE = "wrongCount";
+
 export default {
+
   name: 'App',
   components: {
     ScorePanel
@@ -46,12 +50,16 @@ export default {
       correctAnswer: undefined,
       chosenAnswer: undefined,
       answerSubmitted: false,
+      correctCount: 0,
+      wrongCount: 0,
     }
   },
 
   methods: {
     sendAnswer() {
       this.answerSubmitted = true;
+
+      this.isChosenAnswerCorrect() ? this.correctCount++ : this.wrongCount++;
     },
     isChosenAnswerCorrect() {
       return this.chosenAnswer == this.correctAnswer;
@@ -61,7 +69,7 @@ export default {
       this.answerSubmitted = false;
       this.chosenAnswer = undefined;
       this.title = undefined;
-
+      
       const URL = "https://the-trivia-api.com/v2/questions?limit=1";
       this.axios
         .get(URL)
@@ -71,6 +79,10 @@ export default {
           this.incorrectAnswers = question.incorrectAnswers;
           this.correctAnswer = question.correctAnswer;
         })
+    },
+    saveStorage() {
+      window.localStorage.setItem(CORRECT_COUNT_STORAGE, this.correctCount);
+      window.localStorage.setItem(WRONG_COUNT_STORAGE, this.wrongCount);
     }
   },
 
@@ -84,7 +96,14 @@ export default {
 
   created() {
     this.getNewQuestion();
-  }
+
+    const correctCountStorage = localStorage.getItem(CORRECT_COUNT_STORAGE);
+    correctCountStorage ? this.correctCount = correctCountStorage : this.correctCount = 0;
+    
+    const wrongCountStorage = localStorage.getItem(WRONG_COUNT_STORAGE);
+    wrongCountStorage ? this.wrongCount = wrongCountStorage : this.correctCount = 0;
+  },
+
 }
 
 </script>
