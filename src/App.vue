@@ -4,11 +4,11 @@
       <h1 v-html="this.title"></h1>
 
       <template v-for="(answer, index) in this.answers" :key="index">
-        <input type="radio" name="options" value="{{index}}" />
+        <input v-model="this.chosenAnswer" type="radio" name="options" :value="answer" />
         <label v-html="answer"></label><br />
       </template>
 
-      <button class="send" type="button">Send</button>
+      <button class="send" type="button" :disabled="!this.chosenAnswer" @click="this.sendAnswer()" >Send</button>
 
     </template>
 
@@ -24,10 +24,19 @@ export default {
     return {
       title: undefined,
       incorrectAnswers: [],
-      correctAnswer: undefined
+      correctAnswer: undefined,
+      chosenAnswer: undefined
     }
   },
 
+  methods: {
+    sendAnswer() {
+      if (this.chosenAnswer == this.correctAnswer) {
+        alert("OK")
+      }
+    },
+  },
+  
   computed: {
     answers() {
       let answers = [...this.incorrectAnswers];
@@ -49,7 +58,6 @@ export default {
   }
 }
 
-// 
 </script>
 
 <style lang="scss">
@@ -75,6 +83,11 @@ export default {
     background-color: #1867c0;
     border: 1px solid #1867c0;
     cursor: pointer;
+  }
+
+  button[disabled] {
+    background-color: #6c6d6e;
+    border: 1px solid #6c6d6e;
   }
 
 }
