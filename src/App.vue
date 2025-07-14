@@ -17,9 +17,17 @@
 
 export default {
   name: 'App',
+
+  created() {
+    this.axios
+      .get("https://the-trivia-api.com/v2/questions?limit=50")
+      .then((response) => {
+        console.log(response.data)
+      })
+  }
 }
 
-// https://the-trivia-api.com/v2/questions?limit=1
+// 
 </script>
 
 <style lang="scss">
@@ -48,5 +56,4 @@ export default {
   }
 
 }
-
 </style>
