@@ -1,5 +1,7 @@
 <template>
   <div>
+    <ScorePanel />
+
     <template v-if="this.title">
       <h1 v-html="this.title"></h1>
 
@@ -30,8 +32,12 @@
 
 <script>
 
+import ScorePanel from './components/ScorePanel.vue';
 export default {
   name: 'App',
+  components: {
+    ScorePanel
+  },
 
   data() {
     return {
