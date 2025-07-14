@@ -26,6 +26,14 @@ export default {
     }
   },
 
+  computed: {
+    answers() {
+      let answers = [...this.incorrectAnswers];
+      answers.push(this.correctAnswer);
+      return answers;
+    }
+  },
+
   created() {
     const URL = "https://the-trivia-api.com/v2/questions?limit=1";
     this.axios
