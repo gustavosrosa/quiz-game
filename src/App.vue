@@ -3,8 +3,8 @@
     <template v-if="this.title">
       <h1 v-html="this.title"></h1>
 
-      <template v-for="answer in this.answers" :key="answer">
-        <input type="radio" name="options" value="{{answer}}" />
+      <template v-for="(answer, index) in this.answers" :key="index">
+        <input type="radio" name="options" value="{{index}}" />
         <label v-html="answer"></label><br />
       </template>
 
