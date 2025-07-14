@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Microphones can be used not only to pick up sound, but also to project sound similar to a speaker</h1>
+    <h1 v-html="this.title"></h1>
 
     <input type="radio" name="options" value="True" />
     <label>True</label><br />
@@ -18,11 +18,23 @@
 export default {
   name: 'App',
 
+  data() {
+    return {
+      title: undefined,
+      incorrectAnswers: undefined,
+      correctAnswer: undefined
+    }
+  },
+
   created() {
+    const URL = "https://the-trivia-api.com/v2/questions?limit=1";
     this.axios
-      .get("https://the-trivia-api.com/v2/questions?limit=50")
+      .get(URL)
       .then((response) => {
-        console.log(response.data)
+        const question = response.data[0];
+        this.title = question.question.text;
+        this.incorrectAnswers = question.incorrectAnswers;
+        this.correctAnswer = question.correctAnswer;
       })
   }
 }
