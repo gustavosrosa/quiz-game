@@ -13,15 +13,14 @@
         @click="this.sendAnswer()">Send</button>
 
       <section v-if="this.answerSubmitted" class="result">
-        <h4 v-if="this.chosenAnswer == this.correctAnswer">&#9989; 
-          Congratulations! The answer "{{ this.correctAnswer }}"
-          is
-          correct!
+        <h4 v-if="this.isChosenAnswerCorrect()">&#9989;
+          Congratulations! The answer "<span v-html="this.correctAnswer"></span>"
+          is correct!
         </h4>
-        <h4 v-else>&#10060; I'm sorry, you picked the wrong answer. 
-          The Correct is "{{ this.correctAnswer }}"
+        <h4 v-else>&#10060; I'm sorry, you picked the wrong answer.
+          The correct is "<span v-html="this.correctAnswer"></span>"
         </h4>
-        <button class="send" type="button">Next question</button>
+        <button class="send" type="button" @click="this.getNewQuestion()">Next question</button>
       </section>
 
     </template>
@@ -47,12 +46,26 @@ export default {
   methods: {
     sendAnswer() {
       this.answerSubmitted = true;
-      if (this.chosenAnswer == this.correctAnswer) {
-        console.log("AA");
-      } else {
-        console.log("AA");
-      }
     },
+    isChosenAnswerCorrect() {
+      return this.chosenAnswer == this.correctAnswer;
+    },
+    getNewQuestion() {
+
+      this.answerSubmitted = false;
+      this.chosenAnswer = undefined;
+      this.title = undefined;
+
+      const URL = "https://the-trivia-api.com/v2/questions?limit=1";
+      this.axios
+        .get(URL)
+        .then((response) => {
+          const question = response.data[0];
+          this.title = question.question.text;
+          this.incorrectAnswers = question.incorrectAnswers;
+          this.correctAnswer = question.correctAnswer;
+        })
+    }
   },
 
   computed: {
@@ -64,15 +77,7 @@ export default {
   },
 
   created() {
-    const URL = "https://the-trivia-api.com/v2/questions?limit=1";
-    this.axios
-      .get(URL)
-      .then((response) => {
-        const question = response.data[0];
-        this.title = question.question.text;
-        this.incorrectAnswers = question.incorrectAnswers;
-        this.correctAnswer = question.correctAnswer;
-      })
+    this.getNewQuestion();
   }
 }
 
